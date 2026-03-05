@@ -10,21 +10,31 @@ st.title("Tahmin Doğruluğu Sonuçları")
 st.caption("Siparişe Göre vs Sevke Göre")
 
 uploaded_file = st.file_uploader(
-    "Excel yükle",
+    "Excel dosyasını yükle (.xlsx)",
     type=["xlsx"]
 )
 
-if uploaded_file:
+if uploaded_file is None:
+    st.info("Devam etmek için lütfen Excel dosyasını yükleyin.")
+    st.stop()
+
+try:
     df = pd.read_excel(uploaded_file, header=None)
+
+    if df.shape[1] < 21:
+        st.error("Excel beklenen kolon sayısından az. Lütfen doğru dosyayı yükleyin.")
+        st.stop()
+
     df.columns = [chr(65 + i) for i in range(len(df.columns))]
 
-    COL_AY = "A"
     COL_KAPAK = "B"
     COL_TAHMIN = "O"
     COL_SIPARIS = "N"
     COL_SEVK = "T"
 
     def td(actual, forecast):
+        if pd.isna(actual) or pd.isna(forecast):
+            return None
         if actual == 0 and forecast == 0:
             return None
         return min(actual, forecast) / max(actual, forecast)
@@ -47,6 +57,7 @@ if uploaded_file:
     )
 
     st.subheader("Kapak Bölüm Bazlı Sonuçlar")
+
     table = (
         df.groupby(COL_KAPAK)[["TD_Siparis", "TD_Sevk"]]
         .mean()
@@ -60,3 +71,7 @@ if uploaded_file:
         table[[COL_KAPAK, "Sipariş TD %", "Sevk TD %"]],
         use_container_width=True
     )
+
+except Exception as e:
+    st.error("Uygulama çalışırken hata oluştu:")
+    st.exception(e)
