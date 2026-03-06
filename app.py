@@ -112,8 +112,8 @@ try:
     )
 
     if len(ay_listesi) == 0:
-    st.error("Ay bilgisi bulunamadı. Lütfen Excel'de A sütununu kontrol edin.")
-    st.stop()
+        st.error("Ay bilgisi bulunamadı. Lütfen Excel'de A sütununu kontrol edin.")
+        st.stop()
 
     secili_ay = st.selectbox("Ay", ay_listesi)
 
