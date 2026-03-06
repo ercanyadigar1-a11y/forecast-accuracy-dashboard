@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
+import math
 
+# --------------------------------------------------
+# Sayfa ayarları
+# --------------------------------------------------
 st.set_page_config(
     page_title="Tahmin Doğruluğu Sonuçları",
     layout="wide"
@@ -9,6 +13,9 @@ st.set_page_config(
 st.title("Tahmin Doğruluğu Sonuçları")
 st.caption("Siparişe Göre vs Sevke Göre")
 
+# --------------------------------------------------
+# Dosya yükleme
+# --------------------------------------------------
 uploaded_file = st.file_uploader(
     "Excel dosyasını yükle (.xlsx)",
     type=["xlsx"]
@@ -18,6 +25,28 @@ if uploaded_file is None:
     st.info("Devam etmek için lütfen Excel dosyasını yükleyin.")
     st.stop()
 
+# --------------------------------------------------
+# Güvenli Tahmin Doğruluğu Fonksiyonu
+# --------------------------------------------------
+def td(actual, forecast):
+    try:
+        actual = float(actual)
+        forecast = float(forecast)
+
+        if math.isnan(actual) or math.isnan(forecast):
+            return None
+        if actual == 0 and forecast == 0:
+            return None
+
+        return min(actual, forecast) / max(actual, forecast)
+
+    except Exception:
+        return None
+
+
+# --------------------------------------------------
+# Ana işlem bloğu
+# --------------------------------------------------
 try:
     df = pd.read_excel(uploaded_file, header=None)
 
@@ -25,47 +54,46 @@ try:
         st.error("Excel beklenen kolon sayısından az. Lütfen doğru dosyayı yükleyin.")
         st.stop()
 
+    # Kolonları A, B, C... şeklinde isimlendir
     df.columns = [chr(65 + i) for i in range(len(df.columns))]
 
+    # Kolon tanımları
     COL_KAPAK = "B"
     COL_TAHMIN = "O"
     COL_SIPARIS = "N"
     COL_SEVK = "T"
 
-import math
+    # Sayısal kolonları zorla sayıya çevir (çok önemli)
+    for col in [COL_TAHMIN, COL_SIPARIS, COL_SEVK]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    def td(actual, forecast):
-        try:
-        actual = float(actual)
-        forecast = float(forecast)
-
-            if math.isnan(actual) or math.isnan(forecast):
-                return None
-            if actual == 0 and forecast == 0:
-                return None
-
-    return min(actual, forecast) / max(actual, forecast)
-
-    except Exception:
-        return None
-
+    # Tahmin doğruluğu hesapları
     df["TD_Siparis"] = df.apply(
         lambda x: td(x[COL_SIPARIS], x[COL_TAHMIN]), axis=1
     )
+
     df["TD_Sevk"] = df.apply(
         lambda x: td(x[COL_SEVK], x[COL_TAHMIN]), axis=1
     )
 
+    # --------------------------------------------------
+    # KPI Kartları
+    # --------------------------------------------------
     c1, c2 = st.columns(2)
+
     c1.metric(
         "Siparişe Göre Tahmin Doğruluğu",
-        f"{df['TD_Siparis'].mean()*100:.1f}%"
-    )
-    c2.metric(
-        "Sevke Göre Tahmin Doğruluğu",
-        f"{df['TD_Sevk'].mean()*100:.1f}%"
+        f"{df['TD_Siparis'].mean() * 100:.1f}%"
     )
 
+    c2.metric(
+        "Sevke Göre Tahmin Doğruluğu",
+        f"{df['TD_Sevk'].mean() * 100:.1f}%"
+    )
+
+    # --------------------------------------------------
+    # Kapak Bölüm Bazlı Tablo
+    # --------------------------------------------------
     st.subheader("Kapak Bölüm Bazlı Sonuçlar")
 
     table = (
