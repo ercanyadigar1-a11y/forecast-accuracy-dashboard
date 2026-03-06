@@ -32,7 +32,7 @@ try:
     COL_SIPARIS = "N"
     COL_SEVK = "T"
 
-   import math
+import math
 
 def td(actual, forecast):
     try:
