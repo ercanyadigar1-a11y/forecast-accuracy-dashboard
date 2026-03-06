@@ -32,12 +32,22 @@ try:
     COL_SIPARIS = "N"
     COL_SEVK = "T"
 
-    def td(actual, forecast):
-        if pd.isna(actual) or pd.isna(forecast):
+   import math
+
+def td(actual, forecast):
+    try:
+        actual = float(actual)
+        forecast = float(forecast)
+
+        if math.isnan(actual) or math.isnan(forecast):
             return None
         if actual == 0 and forecast == 0:
             return None
+
         return min(actual, forecast) / max(actual, forecast)
+
+    except Exception:
+        return None
 
     df["TD_Siparis"] = df.apply(
         lambda x: td(x[COL_SIPARIS], x[COL_TAHMIN]), axis=1
