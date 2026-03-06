@@ -44,6 +44,19 @@ def td(actual, forecast):
         return None
 
 # --------------------------------------------------
+# KOLON HARF TANIMLARI (GLOBAL)
+# --------------------------------------------------
+COL_AY = "A"
+COL_KAPAK = "B"
+COL_BAZ = "AI"          # <-- Baz (KI / ADT)
+COL_MARKA = "AL"        # <-- Marka
+COL_SATIS_ORG = "E"    # <-- Satış Organizasyonu
+
+COL_TAHMIN = "O"
+COL_SIPARIS = "N"
+COL_SEVK = "T"
+
+# --------------------------------------------------
 # KATEGORİ BELİRLEME
 # --------------------------------------------------
 def kategori_belirle(row):
