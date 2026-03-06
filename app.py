@@ -96,14 +96,20 @@ HEDEFLER = {
 # --------------------------------------------------
 try:
     df = pd.read_excel(uploaded_file, header=None)
+    
+    def excel_col_name(n):
+        name = ""
+        while n >= 0:
+            name = chr(n % 26 + 65) + name
+            n = n // 26 - 1
+        return name
+
+    df.columns = [excel_col_name(i) for i in range(len(df.columns))]
 
     # En az T sütunu olmalı
     if df.shape[1] < 21:
         st.error("Excel beklenen kolon sayısından az.")
         st.stop()
-
-    # Kolonları A, B, C... yap
-    df.columns = [chr(65 + i) for i in range(len(df.columns))]
 
     # KOLON TANIMLARI
     COL_AY = "A"
