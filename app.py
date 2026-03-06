@@ -120,11 +120,11 @@ try:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
 
-st.subheader("Kolon Eşleştirme")
+    st.subheader("Kolon Eşleştirme")
 
-COL_BAZ = st.selectbox("Baz kolonu", df.columns, index=2)
-COL_MARKA = st.selectbox("Marka kolonu", df.columns, index=3)
-COL_SATIS_ORG = st.selectbox("Satış Organizasyonu kolonu", df.columns, index=4)
+    COL_BAZ = st.selectbox("Baz kolonu", df.columns, index=2)
+    COL_MARKA = st.selectbox("Marka kolonu", df.columns, index=3)
+    COL_SATIS_ORG = st.selectbox("Satış Organizasyonu kolonu", df.columns, index=4)
 
     
     # --------------------------------------------------
