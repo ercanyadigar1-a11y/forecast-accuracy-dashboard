@@ -103,10 +103,22 @@ try:
     # AY SEÇİMİ
     # --------------------------------------------------
     st.subheader("Dönem Seçimi")
-    ay_listesi = sorted(df[COL_AY].dropna().unique())
+    
+    # Ay kolonu güvenli hale getir
+    df[COL_AY] = df[COL_AY].astype(str).str.strip()
+
+    ay_listesi = sorted(
+    [ay for ay in df[COL_AY].unique() if ay not in ["nan", "None", ""]]
+    )
+
+    if len(ay_listesi) == 0:
+    st.error("Ay bilgisi bulunamadı. Lütfen Excel'de A sütununu kontrol edin.")
+    st.stop()
+
     secili_ay = st.selectbox("Ay", ay_listesi)
 
     df = df[df[COL_AY] == secili_ay]
+
 
     # --------------------------------------------------
     # HESAPLAR
