@@ -192,4 +192,3 @@ try:
 except Exception as e:
     st.error("Uygulama çalışırken hata oluştu:")
     st.exception(e)
-``
