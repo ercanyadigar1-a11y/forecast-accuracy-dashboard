@@ -34,17 +34,17 @@ try:
 
 import math
 
-def td(actual, forecast):
-    try:
+    def td(actual, forecast):
+        try:
         actual = float(actual)
         forecast = float(forecast)
 
-        if math.isnan(actual) or math.isnan(forecast):
-            return None
-        if actual == 0 and forecast == 0:
-            return None
+            if math.isnan(actual) or math.isnan(forecast):
+                return None
+            if actual == 0 and forecast == 0:
+                return None
 
-        return min(actual, forecast) / max(actual, forecast)
+    return min(actual, forecast) / max(actual, forecast)
 
     except Exception:
         return None
