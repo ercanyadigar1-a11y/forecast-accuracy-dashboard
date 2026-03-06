@@ -47,17 +47,21 @@ def td(actual, forecast):
 # KATEGORİ BELİRLEME
 # --------------------------------------------------
 def kategori_belirle(row):
-    if row["Baz"] == "KI":
-        if row["Satış Organizasyonu"] == 1000:
+    baz = str(row[COL_BAZ]).strip()
+    marka = str(row[COL_MARKA]).strip().upper()
+    satis_org = row[COL_SATIS_ORG]
+
+    if baz == "KI":
+        if satis_org == 1000:
             return "Kağıt Yurtiçi"
-        elif row["Satış Organizasyonu"] == 2000:
+        elif satis_org == 2000:
             return "Profesyonel Kağıt"
         else:
             return "Yurtdışı Kağıt"
     else:
-        if row["Marka"] in ["OKEY", "DETAN", "SELIN", "EGOS"]:
+        if marka in ["OKEY", "DETAN", "SELIN", "EGOS"]:
             return "KBEB"
-        elif row["Marka"] in ["JOHN FRIEDA", "FROSCH"]:
+        elif marka in ["JOHN FRIEDA", "FROSCH"]:
             return "Dağıtım"
         else:
             return "Bebek"
