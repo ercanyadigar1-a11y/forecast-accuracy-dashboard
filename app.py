@@ -111,7 +111,10 @@ try:
     COL_TAHMIN = "O"
     COL_SIPARIS = "N"
     COL_SEVK = "T"
-
+    COL_BAZ = "AI"
+    COL_MARKA = "AL"
+    COL_SATIS_ORG = "E"
+    
     # Sayıya zorlama (kritik)
     for col in [COL_TAHMIN, COL_SIPARIS, COL_SEVK]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
